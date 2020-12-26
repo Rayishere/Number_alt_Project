@@ -83,8 +83,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Backup20170622_0050.txt" />
-    <Content Include="Backup20170621_2142.txt" />
     <Content Include="shuffle.ico" />
     <None Include="README.md" />
   </ItemGroup>
