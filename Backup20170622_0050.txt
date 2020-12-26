@@ -1,0 +1,166 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace B0244139_TermPorject
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            double reqest_to_know = Math.Pow(2, 32);
+            double que = reqest_to_know - 1;
+           
+            for (double i = 2; i < que; i++)
+            {
+                if (que % i == 0)
+                {
+                    lbl_q1_output.Text = "No!";
+                    MessageBox.Show("This is not a prime nubmer " + que.ToString(),
+                        "Question 1",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Asterisk);
+                }
+                else if(que % i != 0)
+                {
+                    lbl_q1_output.Text = "Yes!";
+                    MessageBox.Show("This is a prime nubmer " + que.ToString(),
+                        "Question 1",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Asterisk);
+                    break;
+                }
+            }
+            
+        }
+        
+        private void button2_Click(object sender, EventArgs e)
+        {
+            txt_q2_out.Clear();
+            txt_q2_result.Clear();
+            if (txt_input.Text == null)
+            {
+                MessageBox.Show("Please input some text.", "Note",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
+            }
+            else
+            {
+                string input = txt_input.Text;
+                string output = string.Empty;
+                byte[] bytes = Encoding.UTF8.GetBytes(input);
+                BitArray bits = new BitArray(bytes);
+                
+                try
+                {
+                    
+                    //The number of blocks we required
+                    
+                    //console output
+                    string[] bool_str = new string[bits.Count];
+
+                    Console.WriteLine(bits.Count.ToString());
+                    for (int count = 0; count < bits.Count; count++)
+                    {
+                        bool bit_display = bits.Get(count);
+                        Console.Write(bit_display ? 1 : 0);
+                        
+                        if (bit_display == true)
+                        {
+                            bool_str[count] = "1";
+                        }
+                        else
+                        {
+                            bool_str[count] = "0";
+                        }
+                        
+                    }
+                    Console.WriteLine();
+                    //------text box output--------//
+                    
+                    int count_for = 1;
+
+                    for(int cc = 0; cc < bool_str.Count(); cc++)
+                    {
+                        txt_q2_out.Text += bool_str[cc];
+
+                        if (count_for % 16 == 0)
+                        {
+                            txt_q2_out.Text += Environment.NewLine;
+                        }
+                        else if (count_for % 8 == 0)
+                        {
+                            txt_q2_out.Text += " ";
+                        }
+
+                        count_for = count_for + 1;
+                    }
+
+                    txt_q2_out.Text += BitConverter.ToString(bytes) + ", Total Binary Count:" +
+                                      bits.Count.ToString() + Environment.NewLine;
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                    Console.WriteLine(ex.Message);
+                    Console.WriteLine(ex.StackTrace);
+                    Console.WriteLine(ex.ToString());
+                }
+            }
+            
+        }
+
+        private void txt_input_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.Enter)
+            {
+                button2.Focus();
+                button2_Click(sender, e);
+                txt_input.Focus();
+            }
+            
+        }
+
+        //change position
+        /*
+        public static byte[] p16 (byte[] text_in)
+        {
+            byte[] decoder = new byte[16];
+
+            text_in[14] = decoder[0];
+            decoder[1] = text_in[4];
+            decoder[2] = text_in[13];
+            decoder[3] = text_in[1];
+            decoder[4] = text_in[2];
+            decoder[5] = text_in[15];
+            decoder[6] = text_in[11];
+            decoder[7] = text_in[8];
+            decoder[8] = text_in[3];
+            decoder[9] = text_in[10];
+            decoder[10] = text_in[6];
+            decoder[11] = text_in[12];
+            decoder[12] = text_in[5];
+            decoder[13] = text_in[9];
+            decoder[14] = text_in[0];
+            decoder[15] = text_in[7];
+
+            return decoder;
+
+        }*/
+    }
+}

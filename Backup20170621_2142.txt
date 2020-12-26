@@ -1,0 +1,221 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace B0244139_TermPorject
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            double reqest_to_know = Math.Pow(2, 32);
+            double que = reqest_to_know - 1;
+           
+            for (double i = 2; i < que; i++)
+            {
+                if (que % i == 0)
+                {
+                    lbl_q1_output.Text = "No!";
+                    MessageBox.Show("This is not a prime nubmer " + que.ToString(),
+                        "Question 1",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Asterisk);
+                }
+                else if(que % i != 0)
+                {
+                    lbl_q1_output.Text = "Yes!";
+                    MessageBox.Show("This is a prime nubmer " + que.ToString(),
+                        "Question 1",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Asterisk);
+                    break;
+                }
+            }
+            
+        }
+        
+        private void button2_Click(object sender, EventArgs e)
+        {
+            txt_q2_out.Clear();
+            txt_q2_result.Clear();
+            if (txt_input.Text == null)
+            {
+                MessageBox.Show("Please input some text.", "Note",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
+            }
+            else
+            {
+                string input = txt_input.Text;
+                string output = string.Empty;
+                byte[] bytes = Encoding.UTF8.GetBytes(input);
+                string stream_in = "";
+                BitArray bits = new BitArray(bytes);
+
+                Console.WriteLine(bits.Count.ToString());
+
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    stream_in += Convert.ToString(bits[i]);
+                }
+                
+                try
+                {
+                    int blocksize = 16;
+                    int iterate_num = 0;
+                    
+                    //The number of blocks we required
+                    if(stream_in.Length < blocksize)
+                    {
+                        iterate_num = 1;
+                        stream_in.PadLeft(16, '0');
+                    }
+                    else if(stream_in.Length % blocksize == 0)
+                    {
+                        iterate_num = Convert.ToInt16(stream_in.Length / blocksize);
+                    }
+                    else
+                    {
+                        iterate_num = Convert.ToInt16(stream_in.Length / blocksize) + 1;
+
+                    }
+
+                    Console.WriteLine(stream_in);
+                    //iterate with the string
+                    /*
+                    MemoryStream ms = new MemoryStream(bytes);
+                    BinaryReader br = new BinaryReader(ms);
+                    MemoryStream mswrite = new MemoryStream();
+                    BinaryWriter binarywrite = new BinaryWriter(mswrite);
+                    
+                    while (iterate_num-- > 0)
+                    {
+                        //when it comes to the final one
+                        //Need to pad
+                        if(iterate_num == 0)
+                        {
+                            //blocksize = Convert.ToInt16(stream_in.Length % blocksize);
+                        }
+
+                        //manipulating the bytes
+                        byte[] input_byte = br.ReadBytes(blocksize);
+                        for (int i = 0; i < blocksize; i++)
+                        {
+                            
+                        }
+                        byte[] output_byte = new byte[blocksize];
+
+                        MessageBox.Show(input_byte.Length.ToString() + "," + output_byte.Length.ToString(), blocksize.ToString());
+                        
+                        input_byte[0] = output_byte[14];
+                        input_byte[1] = output_byte[4];
+                        input_byte[2] = output_byte[13];
+                        input_byte[3] = output_byte[1];
+                        input_byte[4] = output_byte[2];
+                        input_byte[5] = output_byte[15];
+                        input_byte[6] = output_byte[11];
+                        input_byte[7] = output_byte[8];
+                        input_byte[8] = output_byte[3];
+                        input_byte[9] = output_byte[10];
+                        input_byte[10] = output_byte[6];
+                        input_byte[11] = output_byte[12];
+                        input_byte[12] = output_byte[5];
+                        input_byte[13] = output_byte[9];
+                        input_byte[14] = output_byte[0];
+                        input_byte[15] = output_byte[7];
+
+                        txt_q2_result.Text += Encoding.UTF8.GetString(mswrite.ToArray());
+                    }
+
+                    
+
+                    binarywrite.Flush();
+                    binarywrite.Close();
+                    mswrite.Close();
+                    br.Close();
+                    ms.Close();*/
+                    
+                    /*//---stream---//
+                    MemoryStream ms = new MemoryStream(bytes);
+                    ms.Position = 0;
+                    StreamReader sr = new StreamReader(ms);
+                    sr.ReadToEnd();
+                    ms.Flush();
+                    ms.Close();
+                    sr.Close();
+                    //----end of stream---//*/
+
+                    //------output--------//
+                    txt_q2_out.Text = BitConverter.ToString(bytes) + Environment.NewLine;
+                    //txt_q2_out.Text += Encoding.UTF8.GetString(bytes);
+                    for (int i = 0; i < bytes.Length; i++)
+                    {
+                        txt_q2_out.Text += Convert.ToString(bytes[i], 2).PadLeft(8, '0') +
+                            Environment.NewLine;
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                    Console.WriteLine(ex.Message);
+                    Console.WriteLine(ex.StackTrace);
+                    Console.WriteLine(ex.ToString());
+                }
+            }
+            
+        }
+
+        private void txt_input_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.Enter)
+            {
+                button2.Focus();
+                button2_Click(sender, e);
+                txt_input.Focus();
+            }
+            
+        }
+
+        //change position
+        /*
+        public static byte[] p16 (byte text_in)
+        {
+            byte[] decoder = new byte[16];
+
+            text_in[14] = decoder[0];
+            decoder[1] = text_in[4];
+            decoder[2] = text_in[13];
+            decoder[3] = text_in[1];
+            decoder[4] = text_in[2];
+            decoder[5] = text_in[15];
+            decoder[6] = text_in[11];
+            decoder[7] = text_in[8];
+            decoder[8] = text_in[3];
+            decoder[9] = text_in[10];
+            decoder[10] = text_in[6];
+            decoder[11] = text_in[12];
+            decoder[12] = text_in[5];
+            decoder[13] = text_in[9];
+            decoder[14] = text_in[0];
+            decoder[15] = text_in[7];
+
+            return decoder;
+
+        }*/
+    }
+}
